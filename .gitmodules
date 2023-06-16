@@ -1,0 +1,3 @@
+[submodule "templates/submodules/STM32CubeF7_Drivers"]
+	path = templates/submodules/STM32CubeF7_Drivers
+	url = https://github.com/trentgill/STM32CubeF7_Drivers
