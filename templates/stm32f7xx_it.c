@@ -28,11 +28,11 @@ int CPU_GetCount( void )
 #ifndef RELEASE // DEBUG mode
 
 #include <stdio.h> // printf
-#include "../fglib/usart.h" // U_PrintNow
+// #include "../fglib/usart.h" // U_PrintNow
 
 static void error( char* msg ){
     printf("%s\n", msg);
-    usart_flush();
+    // usart_flush();
     while(1);
 }
 void NMI_Handler(void){ error("!NMI"); }

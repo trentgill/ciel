@@ -3,7 +3,7 @@ EXECUTABLE=$(TARGET).elf
 
 #GIT_VERSION := $(shell git describe --tags)
 
-CUBE=submodules/STM32CubeF7/Drivers
+CUBE=submodules/STM32CubeF7_Drivers
 HALS=$(CUBE)/STM32F7xx_HAL_Driver/Src
 # USBD=submodules/STM32CubeF7/Middlewares/ST/STM32_USB_Device_Library
 # WRLIB=submodules/wrLib
@@ -31,16 +31,16 @@ STARTUP = $(CUBE)/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f7
 MCFLAGS = -mcpu=cortex-m7 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 STM32_INCLUDES = \
-	-I$(WRLIB)/math/ \
-	-I$(WRLIB)/dsp/ \
 	-I$(CUBE)/CMSIS/Device/ST/STM32F7xx/Include/ \
 	-I$(CUBE)/CMSIS/Include/ \
 	-I$(CUBE)/STM32F7xx_HAL_Driver/Inc/ \
 	-I/usr/local/include/ \
-	-Iusbd/ \
-	-I$(USBD)/Class/CDC/Inc/ \
-	-I$(USBD)/Core/Inc/ \
-	-I$(CARP_DIR)/core/ \
+# 	-Iusbd/ \
+# 	-I$(USBD)/Class/CDC/Inc/ \
+# 	-I$(USBD)/Core/Inc/ \
+# 	-I$(CARP_DIR)/core/ \
+# 	-I$(WRLIB)/math/ \
+# 	-I$(WRLIB)/dsp/ \
 
 OPTIMIZE       = -O3
 
@@ -52,7 +52,7 @@ CFLAGS += $(OPTIMIZE)
 CFLAGS += $(DEFS) -I. -I./ $(STM32_INCLUDES)
 CFLAGS += -fsingle-precision-constant
 #CFLAGS += -Wdouble-promotion
-CFLAGS += -DLUA_32BITS -DLUA_COMPAT_5_2
+# CFLAGS += -DLUA_32BITS -DLUA_COMPAT_5_2
 CFLAGS += -fno-common
 CFLAGS += -DVERSION=\"$(GIT_VERSION)\"
 CFLAGS += -ffunction-sections -fdata-sections # provides majority of LTO binary size reduction
@@ -73,31 +73,30 @@ LIBS = -lm -lc -lnosys
 
 SRC += main.c \
 	stm32f7xx_it.c \
-	lib/screen.c \
-	lib/draw_interface.c \
-# 	$(wildcard usbd/*.c) \
-# 	lib/dacmux.c \
+	system.c \
+	oldlib/dout.c \
+	oldlib/gpio.c \
 
 SRC += system_stm32f7xx.c \
 	$(HALS)/stm32f7xx_hal.c \
 	$(HALS)/stm32f7xx_hal_cortex.c \
-	$(HALS)/stm32f7xx_hal_adc.c \
-	$(HALS)/stm32f7xx_hal_dac.c \
-	$(HALS)/stm32f7xx_hal_dma.c \
 	$(HALS)/stm32f7xx_hal_gpio.c \
-	$(HALS)/stm32f7xx_hal_i2c.c \
-	$(HALS)/stm32f7xx_hal_ltdc.c \
-	$(HALS)/stm32f7xx_hal_pcd.c \
-	$(HALS)/stm32f7xx_hal_pcd_ex.c \
 	$(HALS)/stm32f7xx_hal_pwr.c \
 	$(HALS)/stm32f7xx_hal_pwr_ex.c \
 	$(HALS)/stm32f7xx_hal_rcc.c \
 	$(HALS)/stm32f7xx_hal_rcc_ex.c \
-	$(HALS)/stm32f7xx_hal_sai.c \
-	$(HALS)/stm32f7xx_hal_tim.c \
-	$(HALS)/stm32f7xx_hal_tim_ex.c \
-	$(HALS)/stm32f7xx_hal_uart.c \
-	$(HALS)/stm32f7xx_hal_usart.c \
+# 	$(HALS)/stm32f7xx_hal_adc.c \
+# 	$(HALS)/stm32f7xx_hal_dac.c \
+# 	$(HALS)/stm32f7xx_hal_dma.c \
+# 	$(HALS)/stm32f7xx_hal_i2c.c \
+# 	$(HALS)/stm32f7xx_hal_ltdc.c \
+# 	$(HALS)/stm32f7xx_hal_pcd.c \
+# 	$(HALS)/stm32f7xx_hal_pcd_ex.c \
+# 	$(HALS)/stm32f7xx_hal_sai.c \
+# 	$(HALS)/stm32f7xx_hal_tim.c \
+# 	$(HALS)/stm32f7xx_hal_tim_ex.c \
+# 	$(HALS)/stm32f7xx_hal_uart.c \
+# 	$(HALS)/stm32f7xx_hal_usart.c \
 # 	$(HALS)/stm32f7xx_ll_usb.c \
 #	$(HALS)/stm32f7xx_hal_flash.c \
 #	$(HALS)/stm32f7xx_hal_flash_ex.c \
@@ -112,22 +111,22 @@ SRC += system_stm32f7xx.c \
 # 	$(USBD)/Core/Src/usbd_ioreq.c \
 # 	$(USBD)/Class/CDC/Src/usbd_cdc.c \
 
-SRC += \
-	$(WRMATH)/str_buffer.c \
-	$(WRMATH)/wrQueue.c \
+# SRC += \
+# 	$(WRMATH)/str_buffer.c \
+# 	$(WRMATH)/wrQueue.c \
 
-SRC += \
-	$(WRDSP)/wrFilter.c \
+# SRC += \
+# 	$(WRDSP)/wrFilter.c \
 
-SRC += \
-	$(FGLIB)/system.c \
-	$(FGLIB)/din.c \
-	$(FGLIB)/dout.c \
-	$(FGLIB)/gpio.c \
-	$(FGLIB)/i2c.c \
-	$(FGLIB)/timers.c \
-	$(FGLIB)/usart.c \
-	$(FGLIB)/uart.c \
+# SRC += \
+# 	$(FGLIB)/system.c \
+# 	$(FGLIB)/din.c \
+# 	$(FGLIB)/dout.c \
+# 	$(FGLIB)/gpio.c \
+# 	$(FGLIB)/i2c.c \
+# 	$(FGLIB)/timers.c \
+# 	$(FGLIB)/usart.c \
+# 	$(FGLIB)/uart.c \
 # 	$(FGLIB)/adc.c \
 # 	$(FGLIB)/dac.c \
 # 	$(FGLIB)/mux.c \
