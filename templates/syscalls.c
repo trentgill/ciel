@@ -2,8 +2,6 @@
 #include <stm32f7xx.h>
 #include <stdio.h>
 
-#include "../fglib/usart.h"
-
 extern int errno;
 register char * stack_ptr __asm("sp");
 
@@ -12,7 +10,7 @@ register char * stack_ptr __asm("sp");
 int _write(int file, char* data, int len)
 {
 #ifndef RELEASE
-    usart_print(data,len); // enqueues a string
+    // usart_print(data,len); // enqueues a string
 #endif // RELEASE
     return len;
 }
