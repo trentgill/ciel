@@ -11,24 +11,35 @@
 // LD3 == PB14
 
 // public defns
-static Dout* LD2;
+static Dout LD2;
+static Dout LD3;
 
 int main(void)
 {
     system_init();
 
-    LD2 = dout_init("B7");
+    dout_init(&LD2, "B7");
+    dout_init(&LD3, "B14");
     
-    dout_set(LD2, 1);
+    dout_write(&LD2, 1);
+    dout_write(&LD3, 1);
 
-    uint32_t lasttick = 0; // throttle
+    // uint64_t lasttick = 0; // throttle
+    volatile int d = 100;
+    int s = 0;
     while(1){
-        // 1ms throttled sub-loop
-        if( lasttick != HAL_GetTick() ){
-            lasttick = HAL_GetTick();
-            if( lasttick % 66 == 0 )
-                dout_flip(LD2);
+        // if( (++lasttick) % 0xF0000 == 0 )
+            // dout_flip(LD2);
+        dout_write(&LD3, s);
+        dout_write(&LD2, dout_get(&LD3));
+        s ^= 1;
+
+        while(d > 0){
+            d--;
         }
+        d = 1;
+
+
     }
     return 0;
 }
