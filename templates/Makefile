@@ -74,25 +74,30 @@ LIBS = -lm -lc -lnosys
 SRC += main.c \
 	stm32f7xx_it.c \
 	system.c \
+	oldlib/debug.c \
 	oldlib/dout.c \
 	oldlib/gpio.c \
+	oldlib/spi.c \
+	oldlib/sai.c \
 
 SRC += system_stm32f7xx.c \
 	$(HALS)/stm32f7xx_hal.c \
 	$(HALS)/stm32f7xx_hal_cortex.c \
+	$(HALS)/stm32f7xx_hal_dma.c \
 	$(HALS)/stm32f7xx_hal_gpio.c \
 	$(HALS)/stm32f7xx_hal_pwr.c \
 	$(HALS)/stm32f7xx_hal_pwr_ex.c \
 	$(HALS)/stm32f7xx_hal_rcc.c \
 	$(HALS)/stm32f7xx_hal_rcc_ex.c \
+	$(HALS)/stm32f7xx_hal_spi.c \
+	$(HALS)/stm32f7xx_hal_spi_ex.c \
+	$(HALS)/stm32f7xx_hal_sai.c \
 # 	$(HALS)/stm32f7xx_hal_adc.c \
 # 	$(HALS)/stm32f7xx_hal_dac.c \
-# 	$(HALS)/stm32f7xx_hal_dma.c \
 # 	$(HALS)/stm32f7xx_hal_i2c.c \
 # 	$(HALS)/stm32f7xx_hal_ltdc.c \
 # 	$(HALS)/stm32f7xx_hal_pcd.c \
 # 	$(HALS)/stm32f7xx_hal_pcd_ex.c \
-# 	$(HALS)/stm32f7xx_hal_sai.c \
 # 	$(HALS)/stm32f7xx_hal_tim.c \
 # 	$(HALS)/stm32f7xx_hal_tim_ex.c \
 # 	$(HALS)/stm32f7xx_hal_uart.c \
@@ -103,7 +108,6 @@ SRC += system_stm32f7xx.c \
 #	$(HALS)/stm32f7xx_hal_i2s.c \
 #	$(HALS)/stm32f7xx_hal_dma2d.c \
 #	$(HALS)/stm32f7xx_hal_rng.c \
-#	$(HALS)/stm32f7xx_hal_spi.c \
 
 # SRC += \
 # 	$(USBD)/Core/Src/usbd_core.c \
