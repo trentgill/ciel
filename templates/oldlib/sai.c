@@ -84,13 +84,15 @@ void sai_init( Sai* self, SaiConfig config){
         // PLLSAI_VCO: VCO_429M
         // SAI_CLK(first level) = PLLSAI_VCO/PLLSAIQ = 429/2 = 214.5 Mhz
         // SAI_CLK_x = SAI_CLK(first level)/PLLSAIDIVQ = 214.5/19 = 11.289 Mhz
-    rcc.PLLSAI.PLLSAIN          = 187;
-    rcc.PLLSAI.PLLSAIQ          = 15    ;
-        // 12.46667 (goal was 12.48MHz for 24kHz samplerate worstcase)
+
+    // exactly 12.48MHz -> 24kHz samplerate for 2x4 octal DACs
+    rcc.PLLSAI.PLLSAIN          = 312;
+    rcc.PLLSAI.PLLSAIQ          = 5;
+    rcc.PLLSAIDivQ              = 5;
 
     // rcc.PLLSAI.PLLSAIN          = 344; // 429  344
     // rcc.PLLSAI.PLLSAIQ          = 7;   // 2    7
-    rcc.PLLSAIDivQ              = 1;   // 19   2
+    // rcc.PLLSAIDivQ              = 1;   // 19   2
     HAL_RCCEx_PeriphCLKConfig(&rcc);
 
     // Initialize SAI
@@ -154,10 +156,10 @@ void sai_init( Sai* self, SaiConfig config){
     self->hsai_b.SlotInit.SlotNumber        = 2;
     self->hsai_b.SlotInit.SlotActive        = SAI_SLOTACTIVE_0 | SAI_SLOTACTIVE_1;
 
-    // if( HAL_OK != HAL_SAI_Init(&self->hsai_b)){
-    //     debug(&self->debug, "SAI_init failed");
-    //     return;
-    // }
+    if( HAL_OK != HAL_SAI_Init(&self->hsai_b)){
+        debug(&self->debug, "SAI_init failed");
+        return;
+    }
 
     // Enable SAI to generate clock used by audio driver
     // __HAL_SAI_ENABLE(&self->hsai_b); // adc before dac
@@ -269,6 +271,8 @@ void sai_write_hwords( Sai* self, uint16_t* hwords, uint16_t count){
     //     debug(&self->debug, "SAI block B failed to transmit");
     if(HAL_SAI_Transmit_DMA(&self->hsai_a, (uint8_t*)hwords, count))
         debug(&self->debug, "SAI block A failed to transmit");
+    if(HAL_SAI_Transmit_DMA(&self->hsai_b, (uint8_t*)hwords, count))
+        debug(&self->debug, "SAI block B failed to transmit");
 }
 
 
